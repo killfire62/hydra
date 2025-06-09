@@ -1,3 +1,4 @@
+import { encrypt } from "@main/services/crypto";
 import { registerEvent } from "../register-event";
 
 import type { UserPreferences } from "@types";
@@ -24,17 +25,15 @@ const updateUserPreferences = async (
   }
 
   if (preferences.realDebridApiToken) {
-    preferences.realDebridApiToken = Crypto.encrypt(
-      preferences.realDebridApiToken
-    );
+    preferences.realDebridApiToken = encrypt(preferences.realDebridApiToken);
   }
 
   if (preferences.allDebridApiKey) {
-    preferences.allDebridApiKey = Crypto.encrypt(preferences.allDebridApiKey);
+    preferences.allDebridApiKey = encrypt(preferences.allDebridApiKey);
   }
 
   if (preferences.torBoxApiToken) {
-    preferences.torBoxApiToken = Crypto.encrypt(preferences.torBoxApiToken);
+    preferences.torBoxApiToken = encrypt(preferences.torBoxApiToken);
   }
 
   if (!preferences.downloadsPath) {
