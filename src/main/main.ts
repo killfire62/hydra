@@ -1,10 +1,3 @@
-import {
-  Crypto,
-  DownloadManager,
-  logger,
-  Ludusavi,
-  startMainLoop,
-} from "./services";
 import { RealDebridClient } from "./services/download/real-debrid";
 import { AllDebridClient } from "./services/download/all-debrid";
 import { HydraApi } from "./services/hydra-api";
@@ -16,19 +9,22 @@ import { Downloader } from "@shared";
 import { levelKeys, db } from "./level";
 import type { UserPreferences } from "@types";
 import {
+  Crypto,
+  DownloadManager,
+  logger,
+  Ludusavi,
+  startMainLoop,
   WSClient,
   SystemPath,
   CommonRedistManager,
   TorBoxClient,
   RealDebridClient,
   Aria2,
-  DownloadManager,
   HydraApi,
   uploadGamesBatch,
-  startMainLoop,
-  Ludusavi,
   Lock,
 } from "@main/services";
+
 
 export const loadState = async () => {
   await Lock.acquireLock();
