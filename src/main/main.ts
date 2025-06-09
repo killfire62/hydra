@@ -1,15 +1,18 @@
+import * as Crypto from "./services/crypto";
 import { RealDebridClient } from "./services/download/real-debrid";
 import { AllDebridClient } from "./services/download/all-debrid";
 import { HydraApi } from "./services/hydra-api";
 import { uploadGamesBatch } from "./services/library-sync";
 import { Aria2 } from "./services/aria2";
+
 import { downloadsSublevel } from "./level/sublevels/downloads";
+import { levelKeys, db } from "./level";
+
 import { sortBy } from "lodash-es";
 import { Downloader } from "@shared";
-import { levelKeys, db } from "./level";
 import type { UserPreferences } from "@types";
+
 import {
-  Crypto,
   DownloadManager,
   logger,
   Ludusavi,
@@ -18,10 +21,6 @@ import {
   SystemPath,
   CommonRedistManager,
   TorBoxClient,
-  RealDebridClient,
-  Aria2,
-  HydraApi,
-  uploadGamesBatch,
   Lock,
 } from "@main/services";
 

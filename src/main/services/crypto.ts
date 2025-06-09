@@ -1,23 +1,22 @@
 // src/main/services/crypto.ts
 
-import * as crypto from "crypto";
+import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
 
-const algorithm = "aes-256-cbc";
-const key = crypto.scryptSync("secret-password", "salt", 32);
-const iv = Buffer.alloc(16, 0); // Initialisation vector
+// ⚠️ Change ça par une clé sécurisée (32 bytes pour aes-256-cbc)
+const key = Buffer.from("W9/5C9aJYMtbm9HQ9GZVs3GRj9lpPr6ay91fSxSMVq6ihwahXiehgNtrMGxqQ0bF", "base64");
+const iv = Buffer.alloc(16, 0); // IV statique (mieux d'utiliser randomBytes(16) en prod)
 
-export class Crypto {
-  static encrypt(text: string): string {
-    const cipher = crypto.createCipheriv(algorithm, key, iv);
-    let encrypted = cipher.update(text, "utf8", "hex");
-    encrypted += cipher.final("hex");
-    return encrypted;
-  }
+export function encrypt(text: string): string {
+  const cipher = createCipheriv("aes-256-cbc", key, iv);
+  const encrypted = Buffer.concat([cipher.update(text, "utf-8"), cipher.final()]);
+  return encrypted.toString("hex");
+}
 
-  static decrypt(encryptedText: string): string {
-    const decipher = crypto.createDecipheriv(algorithm, key, iv);
-    let decrypted = decipher.update(encryptedText, "hex", "utf8");
-    decrypted += decipher.final("utf8");
-    return decrypted;
-  }
+export function decrypt(encryptedText: string): string {
+  const decipher = createDecipheriv("aes-256-cbc", key, iv);
+  const decrypted = Buffer.concat([
+    decipher.update(Buffer.from(encryptedText, "hex")),
+    decipher.final(),
+  ]);
+  return decrypted.toString("utf-8");
 }
