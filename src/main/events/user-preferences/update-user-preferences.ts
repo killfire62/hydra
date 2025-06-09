@@ -23,6 +23,24 @@ const updateUserPreferences = async (
     patchUserProfile({ language: preferences.language }).catch(() => {});
   }
 
+  if (preferences.realDebridApiToken) {
+    preferences.realDebridApiToken = Crypto.encrypt(
+      preferences.realDebridApiToken
+    );
+  }
+
+  if (preferences.allDebridApiKey) {
+    preferences.allDebridApiKey = Crypto.encrypt(preferences.allDebridApiKey);
+  }
+
+  if (preferences.torBoxApiToken) {
+    preferences.torBoxApiToken = Crypto.encrypt(preferences.torBoxApiToken);
+  }
+
+  if (!preferences.downloadsPath) {
+    preferences.downloadsPath = null;
+  }
+
   await db.put<string, UserPreferences>(
     levelKeys.userPreferences,
     {

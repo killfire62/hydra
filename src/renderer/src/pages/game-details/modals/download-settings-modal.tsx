@@ -119,6 +119,8 @@ export function DownloadSettingsModal({
         return userPreferences?.torBoxApiToken;
       if (downloader === Downloader.Hydra)
         return isFeatureEnabled(Feature.Nimbus);
+      if (downloader === Downloader.AllDebrid)
+        return userPreferences?.allDebridApiKey;
       return true;
     });
 
@@ -131,6 +133,7 @@ export function DownloadSettingsModal({
     downloaders,
     userPreferences?.realDebridApiToken,
     userPreferences?.torBoxApiToken,
+    userPreferences?.allDebridApiKey,
   ]);
 
   const handleChooseDownloadsPath = async () => {
@@ -187,32 +190,32 @@ export function DownloadSettingsModal({
           <span>{t("downloader")}</span>
 
           <div className="download-settings-modal__downloaders">
-            {downloaders.map((downloader) => {
-              const shouldDisableButton =
-                (downloader === Downloader.RealDebrid &&
-                  !userPreferences?.realDebridApiToken) ||
-                (downloader === Downloader.TorBox &&
-                  !userPreferences?.torBoxApiToken) ||
-                (downloader === Downloader.Hydra &&
-                  !isFeatureEnabled(Feature.Nimbus));
+{downloaders.map((downloader) => (
+  <Button
+    key={downloader}
+    className="download-settings-modal__downloader-option"
+    theme={
+      selectedDownloader === downloader ? "primary" : "outline"
+    }
+    disabled={
+      (downloader === Downloader.RealDebrid &&
+        !userPreferences?.realDebridApiToken) ||
+      (downloader === Downloader.AllDebrid &&
+        !userPreferences?.allDebridApiKey) ||
+      (downloader === Downloader.TorBox &&
+        !userPreferences?.torBoxApiToken) ||
+      (downloader === Downloader.Hydra &&
+        !isFeatureEnabled(Feature.Nimbus))
+    }
+    onClick={() => setSelectedDownloader(downloader)}
+  >
+    {selectedDownloader === downloader && (
+      <CheckCircleFillIcon className="download-settings-modal__downloader-icon" />
+    )}
+    {DOWNLOADER_NAME[downloader]}
+  </Button>
+))}
 
-              return (
-                <Button
-                  key={downloader}
-                  className="download-settings-modal__downloader-option"
-                  theme={
-                    selectedDownloader === downloader ? "primary" : "outline"
-                  }
-                  disabled={shouldDisableButton}
-                  onClick={() => setSelectedDownloader(downloader)}
-                >
-                  {selectedDownloader === downloader && (
-                    <CheckCircleFillIcon className="download-settings-modal__downloader-icon" />
-                  )}
-                  {DOWNLOADER_NAME[downloader]}
-                </Button>
-              );
-            })}
           </div>
         </div>
 

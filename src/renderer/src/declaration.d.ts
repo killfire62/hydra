@@ -37,6 +37,7 @@ import type {
   ShopDetailsWithAssets,
   AchievementCustomNotificationPosition,
   AchievementNotificationInfo,
+  AllDebridUser,
 } from "@types";
 import type { AxiosProgressEvent } from "axios";
 import type disk from "diskusage";
@@ -180,6 +181,12 @@ declare global {
     ) => () => Electron.IpcRenderer;
     getDefaultWinePrefixSelectionPath: () => Promise<string | null>;
     createSteamShortcut: (shop: GameShop, objectId: string) => Promise<void>;
+    authenticateRealDebrid: (apiToken: string) => Promise<RealDebridUser>;
+    authenticateAllDebrid: (
+      apiKey: string
+    ) => Promise<AllDebridUser | { error_code: string }>;
+    authenticateTorBox: (apiToken: string) => Promise<TorBoxUser>;
+    onAchievementUnlocked: (cb: () => void) => () => Electron.IpcRenderer;
 
     /* Download sources */
     putDownloadSource: (

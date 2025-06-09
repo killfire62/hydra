@@ -24,6 +24,7 @@ import { sortBy } from "lodash-es";
 import { TorBoxClient } from "./torbox";
 import { GameFilesManager } from "../game-files-manager";
 import { HydraDebridClient } from "./hydra-debrid";
+import { AllDebridClient } from "./all-debrid";
 
 export class DownloadManager {
   private static downloadingGameId: string | null = null;
@@ -40,6 +41,7 @@ export class DownloadManager {
           })
         : undefined,
       downloadsToSeed?.map((download) => ({
+        action: "seed",
         game_id: levelKeys.game(download.shop, download.objectId),
         url: download.uri,
         save_path: download.downloadPath,
@@ -355,6 +357,27 @@ export class DownloadManager {
           game_id: downloadId,
           url: downloadUrl,
           save_path: download.downloadPath,
+        };
+      }
+      case Downloader.AllDebrid: {
+        const downloadUrls = await AllDebridClient.getDownloadUrls(
+          download.uri
+        );
+
+        if (!downloadUrls.length)
+          throw new Error(DownloadError.NotCachedInAllDebrid);
+
+        const totalSize = downloadUrls.reduce(
+          (total, url) => total + (url.size || 0),
+          0
+        );
+
+        return {
+          action: "start",
+          game_id: downloadId,
+          url: downloadUrls.map((d) => d.link),
+          save_path: download.downloadPath,
+          total_size: totalSize,
         };
       }
       case Downloader.Torrent:
