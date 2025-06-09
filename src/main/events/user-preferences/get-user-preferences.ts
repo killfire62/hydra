@@ -1,3 +1,4 @@
+import { decrypt } from "@main/services/crypto";
 import { registerEvent } from "../register-event";
 import { db, levelKeys } from "@main/level";
 import type { UserPreferences } from "@types";
@@ -10,22 +11,23 @@ const getUserPreferences = async () =>
     })
     .then((userPreferences) => {
       if (userPreferences?.realDebridApiToken) {
-        userPreferences.realDebridApiToken = Crypto.decrypt(
-          userPreferences.realDebridApiToken
-        );
-      }
+  userPreferences.realDebridApiToken = decrypt(
+    userPreferences.realDebridApiToken
+  );
+}
 
-      if (userPreferences?.allDebridApiKey) {
-        userPreferences.allDebridApiKey = Crypto.decrypt(
-          userPreferences.allDebridApiKey
-        );
-      }
+if (userPreferences?.allDebridApiKey) {
+  userPreferences.allDebridApiKey = decrypt(
+    userPreferences.allDebridApiKey
+  );
+}
 
-      if (userPreferences?.torBoxApiToken) {
-        userPreferences.torBoxApiToken = Crypto.decrypt(
-          userPreferences.torBoxApiToken
-        );
-      }
+if (userPreferences?.torBoxApiToken) {
+  userPreferences.torBoxApiToken = decrypt(
+    userPreferences.torBoxApiToken
+  );
+}
+
 
       return userPreferences;
     });
